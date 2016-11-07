@@ -68,5 +68,24 @@ describe('User schema', () => {
 
   });
 
+  it('hashes a password and gets it back out again', done => {
+
+    let user5 = new User({
+      username: 'ready user five',
+      hashpass: ''
+    });
+
+    // generate the hashed password
+    let hashedPass = user5.generateHash('passw0rd');
+    // save the hash on the user
+    user5.hashpass = hashedPass;
+    // check that the original and the hash match
+    let results = user5.validateHash( 'passw0rd' );
+    // assert that the results are true
+    assert.isOk(results, 'should return a truthy value');
+    done();
+
+  });
+
 
 });
