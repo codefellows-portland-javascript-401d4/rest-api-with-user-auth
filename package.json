@@ -1,0 +1,30 @@
+{
+  "name": "rest-api-with-user-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/risafletcher/rest-api-with-user-auth.git"
+  },
+  "author": "Risa Fletcher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/risafletcher/rest-api-with-user-auth/issues"
+  },
+  "homepage": "https://github.com/risafletcher/rest-api-with-user-auth#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0",
+    "nodemon": "^1.11.0"
+  }
+}
