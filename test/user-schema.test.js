@@ -38,7 +38,7 @@ describe('User schema', () => {
       }
     });
   });
-  
+
   it('creates a new user when given username and password', done => {
 
     let user3 = new User({
@@ -55,7 +55,17 @@ describe('User schema', () => {
 
   it('accepts roles', done => {
 
-    done();
+    let user4 = new User({
+      username: 'ready user four',
+      hashpass: 'passw0rd',
+      roles: ['User', 'Admin']
+    });
+
+    user4.validate(err => {
+      if (err) done(err);
+      else done();
+    });
+
   });
 
 
