@@ -1,0 +1,34 @@
+{
+  "name": "rest-api-with-user-auth",
+  "version": "1.0.0",
+  "description": "This is a simple express persistent file api that uses mongodb to store data.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MugsyCarter/rest-api-with-user-auth.git"
+  },
+  "author": "Mugsy Carter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MugsyCarter/rest-api-with-user-auth/issues"
+  },
+  "homepage": "https://github.com/MugsyCarter/rest-api-with-user-auth#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.9.1",
+    "mocha": "^3.1.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0"
+  }
+}
