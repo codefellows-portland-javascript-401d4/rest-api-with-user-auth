@@ -70,7 +70,33 @@ describe('User authentication routes', () => {
       });
   });
 
-  xit('requires a unique username', done => {
+  it('requires a unique username', done => {
+
+    const firstUser = {
+      username: 'Username',
+      password: 'Password'
+    };
+
+    const secondUser = {
+      username: 'Username',
+      password: 'Password'
+    };
+
+    const error = `{"error":"Username ${firstUser.username} already taken. Please try a different name."}`;
+
+    server
+      .post('/api/auth/signup')
+      .send(firstUser)
+      .end((err, res) => {
+      });
+
+    server
+      .post('/api/auth/signup') // expecting an error
+      .send(secondUser)
+      .end((err, res) => {
+        assert.equal(res.text, error);
+        done();
+      });
   });
 
 });
