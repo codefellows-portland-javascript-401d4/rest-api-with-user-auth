@@ -8,28 +8,29 @@ const app = require('../lib/app');
 
 describe('region api', () => {
   before(done => {
-    const CONNECTED = 1;
-    if (connection.readyState === CONNECTED) dropCollection();
-    else connection.on('open', dropCollection);
-
-    function dropCollection() {
-      const name = 'regions';
-      connection.db
-        .listCollections({name})
-        .next((err, collinfo) => {
-          if (!collinfo) return done();
-          connection.db.dropCollection(name, done);
-        });
-    }
+    const drop = () => connection.db.dropDatabase(done);
+    if (connection.readyState === 1) drop();
+    else connection.on('open', drop);
 
   });
 
   const request = chai.request(app);
   const NA = {"region": "NA", "teams": ["Evil Geniuses", "FDL", "CompLexity"]};
+
+  let token = '';
+
+  before(done => {
+    request
+      .post('/auth/signup')
+      .send({username: 'testuser', password: 'testpword', roles: ['admin']})
+      .then(res => assert.ok(token = res.body.token))
+      .then(done, done);
+  });
   
   it('should save a file from a POST request', done => {
     request
     .post('/regions')
+    .set('token', token)
     .send(NA)
     .then(res => {
       assert.ok(res.body._id);
@@ -43,6 +44,7 @@ describe('region api', () => {
   it('should get all files from a GET request', done => {
     request
       .get('/regions')
+      .set('token', token)
       .then(res => {
         assert.deepEqual(res.body, [NA]);
         done();
@@ -53,6 +55,7 @@ describe('region api', () => {
   it('should get a file by query string', done =>{
     request
       .get('/regions')
+      .set('token', token)
       .query({region: 'NA'})
       .then(res => {
         assert.deepEqual(res.body, [NA]);
@@ -64,6 +67,7 @@ describe('region api', () => {
   it('should update a file', done => {
     request
       .put(`/regions/${NA._id}`)
+      .set('token', token)
       .send({teams: ['Veggies', 'Evil Geniuses', 'Void Boys']})
       .then(res => {
         assert.deepEqual(res.body, { ok: 1, nModified: 1, n: 1 });
@@ -74,6 +78,7 @@ describe('region api', () => {
   it('should show the number of ti winning teams in the region', done => {
     request
       .get('/winners/NA')
+      .set('token', token)
       .then(res => {
         assert.equal(res.text, 'This region has 1 TI winning teams');
         done();
@@ -84,6 +89,7 @@ describe('region api', () => {
   it('should delete a file', done => {
     request
       .del(`/regions/${NA._id}`)
+      .set('token', token)
       .then(res => {
         assert.equal(res.text, `Resource ${NA._id} was deleted`);
         done();
