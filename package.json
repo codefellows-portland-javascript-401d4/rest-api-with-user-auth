@@ -1,7 +1,7 @@
 {
-  "name": "express-mongo-relations",
+  "name": "rest-api-with-user-auth",
   "version": "1.0.0",
-  "description": "Code Fellows 401 Assignment 2016-11-04",
+  "description": "Code Fellows 401 Assignment 2016-11-07",
   "main": "server.js",
   "scripts": {
     "pretest": "npm run lint",
@@ -12,24 +12,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gnkatchmar/express-mongo-relations.git"
+    "url": "git+https://github.com/gnkatchmar/rest-api-with-user-auth.git"
   },
   "author": "Greg Katchmar <gunk55@msn.com> (www.gkatchmar.com)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gnkatchmar/express-mongo-relations/issues"
+    "url": "https://github.com/gnkatchmar/rest-api-with-user-auth/issues"
   },
-  "homepage": "https://github.com/gnkatchmar/express-mongo-relations#readme",
+  "homepage": "https://github.com/gnkatchmar/rest-api-with-user-auth#readme",
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "mongoose": "^4.6.5",
-    "morgan": "^1.7.0"
+    "jsonwebtoken": "^7.1.9",
+    "mongoose": "^4.6.5"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "eslint": "^3.9.1",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0"
   }
 }

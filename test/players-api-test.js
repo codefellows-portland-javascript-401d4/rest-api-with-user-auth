@@ -13,20 +13,11 @@ const app = require( '../lib/app' );
 
 describe( 'player api', () => {
 
+//this one "drops the hammer" on the database as both players and teams are being added now
   before( done => {
-    const CONNECTED = 1;
-    if (connection.readyState === CONNECTED) dropCollection();
-    else connection.on('open', dropCollection);
-
-    function dropCollection(){
-      const name = 'players';
-      connection.db
-				.listCollections({ name })
-				.next( (err, collinfo) => {
-  if (!collinfo) return done();
-  connection.db.dropCollection(name, done);
-});
-    }
+    const drop = () => connection.db.dropDatabase( done );
+    if ( connection.readyState === 1 ) drop();
+    else connection.on( 'open', drop );
   });
 
   const request = chai.request( app );
