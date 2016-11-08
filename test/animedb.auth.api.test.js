@@ -10,7 +10,6 @@ mongoose.Promise = Promise;
 describe('Checking access to anime DB with user auth enabled', done => {
     before( done => {
         const dropAnimes = () => {
-            console.log('hi mom');
             connection.db.dropCollection('animechars', (err, result) => {
                 if (err) done(err);
                 else connection.db.dropCollection('animeshows', (err2, result2) => {
@@ -43,7 +42,14 @@ describe('Checking access to anime DB with user auth enabled', done => {
         password: 'Hellsing',
         roles: ['admin']
     };
+    const seras = {
+        username: 'Seras Victoria',
+        password: 'Vampire'
+    };
     let adminToken = '';
+    let userToken = '';
+    let adminId = '';
+    let userId = '';
 
     it('create a new admin and retrieve a token', done => {
         request
@@ -52,6 +58,23 @@ describe('Checking access to anime DB with user auth enabled', done => {
             .then(res => {
                 assert.isOk(res.body.token);
                 adminToken = res.body.token;
+                adminId = res.body.user_id;
+                done();
+            })
+            .catch(err => {
+                console.error(err);
+                done();
+            });
+    });
+
+    it('create a new regular user and retrieves a token', done => {
+        request
+            .post('/users/signup')
+            .send(seras)
+            .then(res => {
+                assert.isOk(res.body.token);
+                userToken = res.body.token;
+                userId = res.body.user_id;
                 done();
             })
             .catch(err => {
@@ -73,7 +96,7 @@ describe('Checking access to anime DB with user auth enabled', done => {
                 done();
             })
             .catch(err => {
-                // console.error(err);
+                console.error(err);
                 done();
             });
     });
@@ -84,11 +107,44 @@ describe('Checking access to anime DB with user auth enabled', done => {
             .set('Authorization', `Bearer ${adminToken}`)
             .send(keiichi)
             .then(res => {
-                console.log(res.body);
+                assert.isOk(res.body._id);
+                keiichi._id = res.body._id;
+                keiichi.__v = 0;
+                assert.deepEqual(res.body, keiichi);
                 done();
             })
             .catch(err => {
-                // console.error(err);
+                console.error(err);
+                done(err);
+            });
+    });
+
+    it('makes a /DEL request to remove Seras using Alucard', done => {
+        request
+            .del('/users/' + userId)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .then(res => {
+                assert.isOk(res.body);
+                assert.equal(res.body.username, 'Seras Victoria');
+                done();
+            })
+            .catch(err => {
+                console.error(err);
+                done(err);
+            });
+    });
+
+    it('makes a /DEL request to remove Seras using Alucard', done => {
+        request
+            .del('/users/' + adminId)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .then(res => {
+                assert.isOk(res.body);
+                assert.equal(res.body.username, 'Alucard');
+                done();
+            })
+            .catch(err => {
+                console.error(err);
                 done(err);
             });
     });
