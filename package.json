@@ -1,0 +1,42 @@
+{
+  "name": "rest-api-with-user-auth",
+  "version": "1.0.0",
+  "description": "Implement user and password authorization with tokens in a RESTful API",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "nodemon --exec mocha",
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JPGothro/rest-api-with-user-auth.git"
+  },
+  "author": "JP Gothro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JPGothro/rest-api-with-user-auth/issues"
+  },
+  "engines": {
+    "node": "6.9.1"
+  },
+  "homepage": "https://github.com/JPGothro/rest-api-with-user-auth#readme",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.9.1",
+    "mocha": "^3.1.2",
+    "nodemon": "^1.11.0"
+  }
+}
