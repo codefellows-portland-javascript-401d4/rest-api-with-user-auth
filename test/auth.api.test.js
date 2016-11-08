@@ -131,11 +131,5 @@ describe('Checking user authentication middleware for anime DB', () => {
                 })
                 .catch(done);
         });
-
-        after(done => {
-            connection.db.dropCollection('users', () => {
-                done();
-            });
-        });
     });
 });
