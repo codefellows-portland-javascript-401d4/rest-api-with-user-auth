@@ -63,11 +63,11 @@ describe('auth', () => {
     }
 
     it('signup requires username', done => {
-      badRequest('/api/auth/signup', {password: 'abc'}, 'username and password required', done);
+      badRequest('/api/auth/signup', {password: 'abc'}, 'username and password are required', done);
     });
 
     it('signup requires password', done => {
-      badRequest('/api/auth/signup', {username: 'abc'}, 'username and password required', done);
+      badRequest('/api/auth/signup', {username: 'abc'}, 'username and password are required', done);
     });
 
     let token = '';
@@ -81,7 +81,7 @@ describe('auth', () => {
     });
 
     it('unique username required', done => {
-      badRequest('/api/auth/signup', user, 'username already in use', done);
+      badRequest('/api/auth/signup', user, `username ${user.username} already in use`, done);
     });
 
     it('token is valid', done => {
@@ -99,5 +99,6 @@ describe('auth', () => {
         .then(res => assert.equal(res.body.token, token))
         .then(done, done);
     });
+
   });
 });

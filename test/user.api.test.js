@@ -25,20 +25,21 @@
 //   });
 
 //   const request = chai.request(app);
+//   let token = '';
 
 //   const fanBoy = {
 //     name: 'DJ Laptop',
-//     age: 40
+//     password: 'hoohoo'
 //   };
 
 //   const fanGirl = {
 //       name: 'DJ Tanner',
-//       age: 36
+//       password: 'hooha'
 //     };
 
 //   const fan = {
 //       name: 'Rocky Rockin',
-//       age: 64
+//       password: 'haha'
 //     };
 
 //   it('/GET all', done => {
@@ -85,46 +86,46 @@
 //       .catch(done);
 //   });
 
-//   it('/GET users of a specific age', done => {
-//     request
-//       .get('/api/users')
-//       .query({age: 40})
-//       .then(res => {
-//         assert.deepEqual(res.body, [fanBoy]);
-//         done();
-//       })
-//       .catch(done);
-//   });
+//   // it('/GET users of a specific age', done => {
+//   //   request
+//   //     .get('/api/users')
+//   //     .query({age: 40})
+//   //     .then(res => {
+//   //       assert.deepEqual(res.body, [fanBoy]);
+//   //       done();
+//   //     })
+//   //     .catch(done);
+//   // });
 
-//   it('/PUT a new age on a user', done => {
-//     request
-//       .put(`/api/users/${fanBoy._id}`)
-//       .send({age: 23})
-//       .then( (res) => {
-//         assert.deepEqual(res.body.age, 23);
-//         done();
-//       })
-//       .catch(done);
-//   });
+//   // it('/PUT a new age on a user', done => {
+//   //   request
+//   //     .put(`/api/users/${fanBoy._id}`)
+//   //     .send({age: 23})
+//   //     .then( (res) => {
+//   //       assert.deepEqual(res.body.age, 23);
+//   //       done();
+//   //     })
+//   //     .catch(done);
+//   // });
 
-//   it('/GET the average age of all users', done => {
-//     request
-//       .post('/api/users/')
-//       .send(fanGirl)
-//       .then( () => {
-//         request
-//           .post('/api/users/')
-//             .send(fan)
-//             .then( () => {
-//               request
-//                 .get('/api/users/average-age')
-//                 .then( res => {
-//                   assert.deepEqual(res.body.averageAge, 41);
-//                   done();
-//                 });
-//             });
-//       });
-//   });
+//   // it('/GET the average age of all users', done => {
+//   //   request
+//   //     .post('/api/users/')
+//   //     .send(fanGirl)
+//   //     .then( () => {
+//   //       request
+//   //         .post('/api/users/')
+//   //           .send(fan)
+//   //           .then( () => {
+//   //             request
+//   //               .get('/api/users/average-age')
+//   //               .then( res => {
+//   //                 assert.deepEqual(res.body.averageAge, 41);
+//   //                 done();
+//   //               });
+//   //           });
+//   //     });
+//   // });
 
 //   it('/DELETE a user', done => {
 //     request

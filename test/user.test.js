@@ -3,10 +3,9 @@
 
 // describe('User model', () => {
 
-//   it('validates with name and age', done => {
+//   it('validates with name', done => {
 //     const user = new User({
-//       name: 'Rocky Balboa',
-//       age: 57
+//       name: 'Rocky Balboa'
 //     });
 
 //     user.validate(err => {
@@ -17,7 +16,6 @@
 
 //   it('name is required', done => {
 //     const user = new User({
-//       age: 16
 //     });
 
 //     user.validate(err => {
@@ -26,15 +24,15 @@
 //     });
 //   });
 
-//   it('age must be a valid age', done => {
-//     const user = new User({
-//       name: 'Marie Curie',
-//       age: 148
-//     });
+//   // it('age must be a valid age', done => {
+//   //   const user = new User({
+//   //     name: 'Marie Curie',
+//   //     age: 148
+//   //   });
 
-//     user.validate(err => {
-//       assert.isOk(err, 'you must enter an age between 0 and 130');
-//       done();
-//     });
-//   });
+//   //   user.validate(err => {
+//   //     assert.isOk(err, 'you must enter an age between 0 and 130');
+//   //     done();
+//   //   });
+//   // });
 // });
