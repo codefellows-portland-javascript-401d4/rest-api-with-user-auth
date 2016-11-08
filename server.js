@@ -1,5 +1,4 @@
 require('dotenv').load();
-console.log(process.env);
 
 const app = require('./lib/app');
 const port = process.env.PORT;
