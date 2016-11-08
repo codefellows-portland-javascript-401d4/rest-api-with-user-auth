@@ -37,8 +37,26 @@ describe('User authentication routes', () => {
 
   it('requires a username', done => {
 
-    const noPass = {
+    const noName = {
       password: 'Password'
+    };
+
+    const error = '{"error":"Username and password are required."}';
+
+    server
+      .post('/api/auth/signup') // expecting an error
+      .send(noName)
+      .end((err, res) => {
+        assert.equal(res.text, error);
+        done();
+      });
+
+  });
+
+  it('requires a password', done => {
+
+    const noPass = {
+      username: 'Whats in a name'
     };
 
     const error = '{"error":"Username and password are required."}';
@@ -50,10 +68,6 @@ describe('User authentication routes', () => {
         assert.equal(res.text, error);
         done();
       });
-
-  });
-
-  xit('requires a password', done => {
   });
 
   xit('requires a unique username', done => {
