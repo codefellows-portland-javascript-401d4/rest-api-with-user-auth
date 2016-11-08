@@ -1,4 +1,6 @@
 //teams-api parallels players-api (for now) so separate testing not needed
+//"test": "MONGODB_URI=mongodb://localhost/players-test mocha" approach would not work in 
+//Git Bash for Windows from the "test" line. Geoff said go ahead and use just one database
 
 const chai = require( 'chai' );
 const chaiHttp = require( 'chai-http' );
@@ -51,17 +53,7 @@ describe( 'player api', () => {
     wins: 69
   };
 
-//   it( '/POST to register', done => {
-//     request
-// 			.post( '/api/auth/register' )
-//       .send({ username: 'testuser', password: 'abc' })
-// 			.then(res => {
-//   assert.ok(token = res.body.token);
-//   done();
-// })
-// 			.catch( done );
-//   });
-
+  //all following also validate token effectiveness
   it( '/GET all', done => {
     request
 			.get( '/api/players' )

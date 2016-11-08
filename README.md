@@ -8,7 +8,7 @@ Uses two related models (player and teams) to crudely replicate a statistical ba
 
 Features User Management and Authentication.
 
-"Node server.js" to launch program.
+"Node[mon] server.js" to launch program.
 
 In addition to having a MongoDB server running (type 'mongod' in a dedicated terminal window), you will need the following npm installs:
 
