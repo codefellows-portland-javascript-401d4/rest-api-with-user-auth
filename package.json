@@ -1,0 +1,29 @@
+{
+  "name": "rest-api-with-user-auth",
+  "version": "1.0.0",
+  "description": "authorized mongo db",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Waxhoya/rest-api-with-user-auth.git"
+  },
+  "author": "AJ Reel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Waxhoya/rest-api-with-user-auth/issues"
+  },
+  "homepage": "https://github.com/Waxhoya/rest-api-with-user-auth#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "chai-http": "^3.0.0",
+    "express": "^4.14.0"
+  }
+}
