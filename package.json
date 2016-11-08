@@ -6,8 +6,8 @@
   "scripts": {
     "pretest": "npm run lint",
     "lint": "eslint .",
-    "test": "mocha",
-    "test:watch": "nodemon --exec mocha"
+    "test": "MONGODB_URI=mongodb://localhost/creatives-test mocha",
+    "test:watch": "MONGODB_URI=mongodb://localhost/creatives-test nodemon --exec mocha"
   },
   "repository": {
     "type": "git",
