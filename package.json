@@ -4,7 +4,9 @@
   "description": "Creating an app with security and authentication",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "DEBUG=myapp.* nodemon server.js",
+    "test": "mocha",
+    "test:watch": "nodemon --exec mocha"
   },
   "repository": {
     "type": "git",
