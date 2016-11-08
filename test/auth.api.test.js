@@ -7,7 +7,7 @@ const connection = require('../lib/mongooseSetup');
 chai.use(chaiHttp);
 mongoose.Promise = Promise;
 
-describe('Checking access to anime DB with user authentication', () => {
+describe('Checking user authentication middleware for anime DB', () => {
     before( done => {
         const dropAuth = () => connection.db.dropCollection('users', () => {
             done();
@@ -130,6 +130,12 @@ describe('Checking access to anime DB with user authentication', () => {
                     done();
                 })
                 .catch(done);
+        });
+
+        after(done => {
+            connection.db.dropCollection('users', () => {
+                done();
+            });
         });
     });
 });
