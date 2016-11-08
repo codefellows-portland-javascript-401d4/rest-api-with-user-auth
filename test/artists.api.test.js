@@ -2,6 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = chai.assert;
 chai.use(chaiHttp);
+const path = require('path');
+require('dotenv').load({ path: path.join(__dirname, '.env.test') });
 
 const connection = require('../lib/setup-mongoose');
 

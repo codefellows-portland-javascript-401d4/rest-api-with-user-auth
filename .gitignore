@@ -1,6 +1,10 @@
 # Apple
 .DS_Store
 
+# Environmental Variables
+.env
+test/.env.test
+
 # Logs
 logs
 *.log
