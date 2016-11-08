@@ -7,25 +7,28 @@ const connection = require('../lib/setup-mongoose');
 
 const app = require('../lib/app');
 
-describe('artist', () => {
+describe('Artist:', () => {
 
-  before(done => {
-    const CONNECTED = 1;
-    if (connection.readyState === CONNECTED) dropCollection();
-    else connection.on('open', dropCollection);
-
-    function dropCollection(){
-      const name = 'artists';
-      connection.db
-        .listCollections({ name })
-        .next( (err, collinfo) => {
-          if (!collinfo) return done();
-          connection.db.dropCollection(name, done);
-        });
-    }
+  before( done => {
+    const drop = () => connection.db.dropDatabase(done);
+    if (connection.readyState === 1) drop();
+    else connection.on( 'open', drop );
   });
 
   const request = chai.request(app);
+  let token = '';
+
+  before(done => {
+    request
+      .post('/api/auth/signup')
+      .send({ username: 'somebody', password: 'password'})
+      .then(res => {
+        assert.ok(res.body.token);
+        token = res.body.token;
+      })
+      .then(done)
+      .catch(done);
+  });
 
   const quire = {
     name: 'quire',
@@ -37,6 +40,7 @@ describe('artist', () => {
   it('GETs all', done => {
     request
       .get('/api/artists')
+      .set('authorization', token)
       .then( res => {
         assert.deepEqual(res.body, []);
         done();
@@ -47,6 +51,7 @@ describe('artist', () => {
   it('POSTs a new artist', done => {
     request
       .post('/api/artists')
+      .set('authorization', token)
       .send(quire)
       .then(res => {
         const artist = res.body;
@@ -62,6 +67,7 @@ describe('artist', () => {
   it('GETs by id', done => {
     request
       .get(`/api/artists/${quire._id}`)
+      .set('authorization', token)
       .then(res => {
         const artist = res.body;
         assert.deepEqual(artist, quire);
@@ -73,6 +79,7 @@ describe('artist', () => {
   it('GETs all after post', done => {
     request
       .get('/api/artists')
+      .set('authorization', token)
       .then(res => {
         assert.deepEqual(res.body, [quire]);
         done();
@@ -83,6 +90,7 @@ describe('artist', () => {
   it('POSTs default genre of pop', done => {
     request
       .post('/api/artists')
+      .set('authorization', token)
       .send({ name: 'tim combs', shows: 92 })
       .then(res => {
         let genre = 'pop';
@@ -97,6 +105,7 @@ describe('artist', () => {
     let average = {"average": 98.5};
     request
       .get('/api/artists/averageShows')
+      .set('authorization', token)
       .then(res => {
         assert.deepEqual(res.body, average);
         done();
@@ -107,6 +116,7 @@ describe('artist', () => {
   it('GETs where genre is mixed media', done => {
     request
       .get('/api/artists')
+      .set('authorization', token)
       .query({genre: 'mixed media'})
       .then(res => {
         assert.deepEqual(res.body, [quire]);
@@ -118,6 +128,7 @@ describe('artist', () => {
   it('DELETEs an artist', done => {
     request
       .delete(`/api/artists/${quire._id}`)
+      .set('authorization', token)
       .then(res => {
         assert.deepEqual(res.body, quire);
         done();
