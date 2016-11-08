@@ -13,7 +13,7 @@ const app = require( '../lib/app' );
 
 describe( 'player api', () => {
 
-//this one "drops the hammer" on the database as both players and teams are being added now
+//clears database and all of its collections
   before( done => {
     const drop = () => connection.db.dropDatabase( done );
     if ( connection.readyState === 1 ) drop();
@@ -21,6 +21,15 @@ describe( 'player api', () => {
   });
 
   const request = chai.request( app );
+  let token = '';
+
+  before(done => {
+    request
+			.post('/api/auth/register')
+			.send({ username: 'testuser', password: 'abc' })
+			.then(res => assert.ok(token = res.body.token))
+			.then(done, done);
+  });
 
   const healy = {
     name: 'Ryon Healy',
@@ -42,9 +51,21 @@ describe( 'player api', () => {
     wins: 69
   };
 
+//   it( '/POST to register', done => {
+//     request
+// 			.post( '/api/auth/register' )
+//       .send({ username: 'testuser', password: 'abc' })
+// 			.then(res => {
+//   assert.ok(token = res.body.token);
+//   done();
+// })
+// 			.catch( done );
+//   });
+
   it( '/GET all', done => {
     request
 			.get( '/api/players' )
+      .set('authorization', `${token}`)
 			.then( res => {
   assert.deepEqual( res.body, [] );
   done();
@@ -55,7 +76,8 @@ describe( 'player api', () => {
   it( '/POST', done => {
     request
 			.post( '/api/players' )
-			.send( healy )
+      .set('authorization', `${token}`)
+      .send( healy )
 			.then( res => {
   const player = res.body;
   assert.ok( player._id );
@@ -69,6 +91,7 @@ describe( 'player api', () => {
   it( '/GET all after post', done => {
     request
 			.get( '/api/players' )
+      .set('authorization', `${token}`)
 			.then( res => {
   assert.deepEqual( res.body, [ healy ] );
   done();
@@ -79,6 +102,7 @@ describe( 'player api', () => {
   it( '/GET by id', done => {
     request
 			.get( `/api/players/${healy._id}` )
+      .set('authorization', `${token}`)
 			.then( res => {
   const player = res.body;
   assert.deepEqual( player, healy );
@@ -90,6 +114,7 @@ describe( 'player api', () => {
   it( 'add an additional player', done => {
     request
 			.post( '/api/players' )
+      .set('authorization', `${token}`)
 			.send(bryant)
 			.then( res => {
   assert.ok( res.body._id );
@@ -101,6 +126,7 @@ describe( 'player api', () => {
   it( '/GETs sorted homer leaders after 2nd player (Bryant) with more HRs added earlier', done => {
     request
 			.get( '/api/players/hrLeaders' )
+      .set('authorization', `${token}`)
 			.then( res => {
 
   assert.equal( res.body[0].name, 'Kris Bryant' );
@@ -112,6 +138,7 @@ describe( 'player api', () => {
   it( '/POST adding team for next test', done => {
     request
 			.post( '/api/teams' )
+      .set('authorization', `${token}`)
 			.send( athletics )
 			.then( res => {
   const team = res.body;
@@ -128,6 +155,7 @@ describe( 'player api', () => {
     testPath = '/api/teams/' + athletics._id + '/players/' + healy._id;
     request
 			.put( testPath )
+      .set('authorization', `${token}`)
 			.then( res => {
   assert.equal( res.body.teamId, athletics._id); 
   done();
@@ -136,4 +164,6 @@ describe( 'player api', () => {
   });
 
 });
+
+
 
