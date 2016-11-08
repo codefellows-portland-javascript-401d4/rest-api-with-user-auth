@@ -1,3 +1,4 @@
+require('dotenv').load();
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = chai.assert;
@@ -54,7 +55,6 @@ describe('record api', () => {
   });
 
   const dylan = {
-    artist: 'Bob Dylan',
     title: 'Desire',
     year: 1975
   };
@@ -124,6 +124,30 @@ describe('record api', () => {
       .then(res => {
         assert.deepEqual(res.body, [dylan]);
         done();
+      })
+      .catch(done);
+  });
+
+  it('/POST new artist resource', done => {
+    request
+      .post('/api/artists/')
+      .set('Authorization', `Bearer ${token}`)
+      .send({name: 'Bob Dylan'})
+      .then(res => {
+        let newArtistId = res.body._id;
+        request
+          .put(`/api/records/${dylan._id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({artistId: newArtistId})
+          .then(res => {
+            request
+              .get(`/api/records/${dylan._id}`)
+              .set('Authorization', `Bearer ${token}`)
+              .then(res => {
+                assert.deepEqual(res.body.artistId.name, 'Bob Dylan');
+                done();
+              });
+          });
       })
       .catch(done);
   });

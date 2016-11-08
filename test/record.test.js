@@ -15,18 +15,6 @@ describe('Record model', () => {
     });
   });
 
-  it('artist field is required', done => {
-    const record = new Record({
-      title: 'Purple Rain',
-      year: 1984
-    });
-
-    record.validate(err => {
-      assert.isOk(err, 'you must enter an artist name');
-      done();
-    });
-  });
-
   it('title field is required', done => {
     const record = new Record({
       artist: 'OutKast',
