@@ -1,5 +1,5 @@
 
-require('dotenv').load();
+require('dotenv').load({silent: true});
 
 const app = require('./lib/app');
 const http = require('http');

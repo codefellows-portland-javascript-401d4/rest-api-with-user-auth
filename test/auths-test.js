@@ -5,7 +5,7 @@ chai.use( chaiHttp );
 
 const path = require('path');
 // load test env variables
-require('dotenv').load({ path: path.join(__dirname, '.env.test') });
+require('dotenv').load({silent: true, path: path.join(__dirname, '.env.test') });
 
 
 // start the db...
@@ -13,7 +13,7 @@ const connection = require( '../lib/mongoose-config' );
 
 const app = require( '../lib/app' );
 
-describe( 'authentication checks', () => {
+describe( 'authentication checks:', () => {
 
 	// you can drop the whole database (instead of one collection):
     before( done => {
@@ -24,7 +24,7 @@ describe( 'authentication checks', () => {
 
     const request = chai.request(app);
 
-    describe( 'various unauthorized', () => {
+    describe( 'various unauthorized:', () => {
 
         it( '400 with no token', done => {
             request
@@ -71,7 +71,7 @@ describe( 'authentication checks', () => {
         roles: ['admin']
     };
 
-    describe( 'user management', () => {
+    describe( 'user management:', () => {
 
         function badRequest( url, send, error, done ) {
             request

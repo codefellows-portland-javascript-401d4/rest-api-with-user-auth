@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 const path = require('path');
 // load test env variables
-require('dotenv').load({ path: path.join(__dirname, '.env.test') });
+require('dotenv').load({silent: true, path: path.join(__dirname, '../test/.env.test') });
 
 const connection = require('../lib/mongoose-config');
 const app = require('../lib/app');
