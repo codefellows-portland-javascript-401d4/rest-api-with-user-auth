@@ -1,0 +1,12 @@
+username: Mugsy
+password: Carter
+roles: Admin
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjM2MmFjNDc5N2UwMjM2OGYwYTIwNSIsInJvbGVzIjpbIkFkbWluIl0sImlhdCI6MTQ3ODcxNDAyOH0.MY_IZnGIw57PvPvCP0-QzK8ZJdhmNFdtX74NJqFvoZQ
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjM2MmFjNDc5N2UwMjM2OGYwYTIwNSIsInJvbGVzIjpbIkFkbWluIl0sImlhdCI6MTQ3ODcxNTAzN30.ygMyDJ1VroR6HLLEBghsEnPJide8wbRu1kr_HccZAtc
+
+{
+"username": "Mugsy",
+"password": "Carter"
+}
