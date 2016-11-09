@@ -32,7 +32,7 @@ describe('Not authorized', () => {
 
 });
 
-const user = {
+const testUser = {
   username: 'Trump',
   password: 'TinyHands'
 };
@@ -46,7 +46,8 @@ const badRequest = (url, send, error, done) => {
       assert.equal(res.status, 400);
       assert.equal(res.response.body.error, error);
       done();
-    });
+    })
+    .catch(done);
 };
 
 describe('User signup/signin', () => {
@@ -57,6 +58,34 @@ describe('User signup/signin', () => {
 
   it('Signup needs a password', done => {
     badRequest('/api/auth/signup', {username: 'Billy'}, 'Username and Password required.', done);
+  });
+
+  let token = '';
+
+  it('Signs up new users', done => {
+    request
+      .post('/api/auth/signup')
+      .send(testUser)
+      .then(res => assert.ok(token = res.body.token))
+      .then(done, done);
+  });
+
+  it('Keeps usernames unique', done => {
+    badRequest('/api/auth/signup', testUser, 'Username Trump already exists.', done);
+  });
+
+  it('Provides valid token', done => {
+    request
+      .get('/api/ships')
+      .set('authorization', token)
+      .then(res => assert.ok(res.body));
+  });
+
+  it('Signs users in', done => {
+    request
+      .post('/api/auth/signin')
+      .send(testUser)
+      .then(res => assert.equal(res.body.token, token));
   });
 
 });
