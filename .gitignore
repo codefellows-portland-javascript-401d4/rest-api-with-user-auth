@@ -9,7 +9,7 @@ npm-debug.log*
 
 # Runtime data
 pids
-*.pid
+*.pidusername
 *.seed
 *.pid.lock
 
@@ -66,3 +66,5 @@ jspm_packages
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+.env
