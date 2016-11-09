@@ -1,16 +1,14 @@
-//teams-api parallels players-api (for now) so separate testing not needed
-//"test": "MONGODB_URI=mongodb://localhost/players-test mocha" approach would not work in 
-//Git Bash for Windows from the "test" line. Geoff said go ahead and use just one database
+//teams-api parallels players-api (other than the final test below) so separate testing not needed
+//"MONGODB_URI=mongodb://localhost/players-test mocha" approach would not work in 
+//Git Bash for Windows from the package.json "test" line (but would work from the command line!)
+//Geoff said go ahead and use just one database that is destroyed and recreated via the test process
 
 const chai = require( 'chai' );
 const chaiHttp = require( 'chai-http' );
 const assert = chai.assert;
 chai.use( chaiHttp );
 
-// start the db, and store connection, 
-// so we can clear db
 const connection = require( '../lib/setup-mongoose' );
-
 const app = require( '../lib/app' );
 
 describe( 'player api', () => {
@@ -39,7 +37,7 @@ describe( 'player api', () => {
     homers: 13
   };
 
-  //he will be used to prove homer leader sort at end
+  //he will be used to prove validity of homer leader sort at end
   const bryant =  {
     name: 'Kris Bryant',
     position: '1B',
