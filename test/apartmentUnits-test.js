@@ -4,6 +4,10 @@ const server = require('../server.js');
 const assert = chai.assert;
 chai.use(chaiHttp);
 
+const path = require('path');
+// load test env variables
+require('dotenv').load({ path: path.join(__dirname, '.env.test') });
+
 const connection = require('../lib/mongoose-config');
 const app = require('../lib/app');
 
@@ -24,6 +28,24 @@ describe('Validating ApartmentUnits', () => {
                 });
         }
     });
+
+    const userAdmin = {
+        username: 'Test Admin',
+        password: 'ThePWD',
+        roles: ['admin']
+    };
+
+    const userSuperUser = {
+        username: 'Test Super',
+        password: 'SuperPWD',
+        roles: ['super-user']
+    };
+
+    const userReadOnly = {
+        username: 'Test Admin',
+        password: 'ReadPWD',
+        roles: ['read-only']
+    };
 
     const testAptUnit = {
         name: 'Test Apartment',
@@ -50,9 +72,48 @@ describe('Validating ApartmentUnits', () => {
 
     const request = chai.request(app);
 
-    it('GET all ', done => {
+    let tokenAdmin = '',
+        tokenSuper = '',
+        tokenRead = '';
+
+    before( done => {
+        request
+            .post( '/api/auth/signup' )
+            .send( userAdmin )
+            .then( res => assert.ok( tokenAdmin = res.body.token ) )
+            .then( done, done );
+
+        request
+            .post( '/api/auth/signup' )
+            .send( userSuperUser )
+            .then( res => assert.ok( tokenSuper = res.body.token ) )
+            .then( done, done );
+        
+        request
+            .post( '/api/auth/signup' )
+            .send( userReadOnly )
+            .then( res => assert.ok( tokenRead = res.body.token ) )
+            .then( done, done );
+    
+    });
+
+
+    it('GET all without token', done => {
         request
             .get('/api/apartmentunits')
+            .then( res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'unauthorized, no token provided' );
+                done();
+            });
+    });
+
+    it('GET all with token', done => {
+        // NOTE: all 3 test users will be able to get data.
+        request
+            .get('/api/apartmentunits')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .then( res => {
                 assert.deepEqual(res.body, []);
                 done();
@@ -60,9 +121,23 @@ describe('Validating ApartmentUnits', () => {
             .catch(done);
     });
 
-    it('POST request', done => {
+    it('POST request invalid token', done => {
         request
             .post('/api/apartmentunits')
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .send(testAptUnit)
+            .then(res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('POST request valid token', done => {
+        request
+            .post('/api/apartmentunits')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send(testAptUnit)
             .then(res => {
                 const aptUnit = res.body;
@@ -79,6 +154,7 @@ describe('Validating ApartmentUnits', () => {
     it('GET by id', done => {
         request
             .get(`/api/apartmentunits/${testAptUnit._id}`)
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .then( res => {
                 assert.deepEqual(res.body, testAptUnit);
                 done();
@@ -89,6 +165,7 @@ describe('Validating ApartmentUnits', () => {
     it('GET all after POST', done => {
         request
             .get('/api/apartmentunits')
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .then( res => {
                 assert.deepEqual(res.body, [testAptUnit]);
                 done();
