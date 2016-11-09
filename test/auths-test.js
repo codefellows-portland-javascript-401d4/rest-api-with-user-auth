@@ -24,7 +24,7 @@ describe( 'authentication checks', () => {
 
     const request = chai.request(app);
 
-    describe( 'unauthorized', () => {
+    describe( 'various unauthorized', () => {
 
         it( '400 with no token', done => {
             request
@@ -59,17 +59,17 @@ describe( 'authentication checks', () => {
         roles: ['admin']
     };
 
-    const user2 = {
-        username: '',
-        password: 'TooMuch',
-        roles: ['admin']
-    };
+    // const user2 = {
+    //     username: '',
+    //     password: 'TooMuch',
+    //     roles: ['admin']
+    // };
 
-    const user3 = {
-        username: 'Test Ahsterone',
-        password: '',
-        roles: ['admin']
-    };
+    // const user3 = {
+    //     username: 'Test Ahsterone',
+    //     password: '',
+    //     roles: ['admin']
+    // };
 
     describe( 'user management', () => {
 

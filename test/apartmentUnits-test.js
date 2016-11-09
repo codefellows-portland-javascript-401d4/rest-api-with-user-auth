@@ -30,19 +30,19 @@ describe('Validating ApartmentUnits', () => {
     });
 
     const userAdmin = {
-        username: 'Test Admin',
+        username: 'Test Admin Apts',
         password: 'ThePWD',
         roles: ['admin']
     };
 
     const userSuperUser = {
-        username: 'Test Super',
+        username: 'Test Super Apts',
         password: 'SuperPWD',
         roles: ['super-user']
     };
 
     const userReadOnly = {
-        username: 'Test Admin',
+        username: 'Test Read Only Apts',
         password: 'ReadPWD',
         roles: ['read-only']
     };
@@ -81,22 +81,21 @@ describe('Validating ApartmentUnits', () => {
             .post( '/api/auth/signup' )
             .send( userAdmin )
             .then( res => assert.ok( tokenAdmin = res.body.token ) )
-            .then( done, done );
-
-        request
-            .post( '/api/auth/signup' )
-            .send( userSuperUser )
-            .then( res => assert.ok( tokenSuper = res.body.token ) )
-            .then( done, done );
-        
-        request
-            .post( '/api/auth/signup' )
-            .send( userReadOnly )
-            .then( res => assert.ok( tokenRead = res.body.token ) )
-            .then( done, done );
-    
+            .then( done => {
+                request
+                    .post( '/api/auth/signup' )
+                    .send( userSuperUser )
+                    .then( res => assert.ok( tokenSuper = res.body.token ) )
+                    .then( done => {
+                        request
+                            .post( '/api/auth/signup' )
+                            .send( userReadOnly )
+                            .then( res => assert.ok( tokenRead = res.body.token ) )
+                            .then(done)
+                            .catch(done);
+                    });
+            });
     });
-
 
     it('GET all without token', done => {
         request
@@ -173,9 +172,23 @@ describe('Validating ApartmentUnits', () => {
             .catch(done);
     });
 
-    it('PUT request', done => {
+    it('PUT request with invalid token', done => {
         request
             .put(`/api/apartmentunits/${testAptUnit._id}`)
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .send(testAptUnitUpd)
+            .then(res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('PUT request with valid token', done => {
+        request
+            .put(`/api/apartmentunits/${testAptUnit._id}`)
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .send(testAptUnitUpd)
             .then(res => {
                 assert.deepEqual(res.body, testAptUnit);
@@ -184,9 +197,22 @@ describe('Validating ApartmentUnits', () => {
             .catch(done);
     });
 
-    it('DELETE request', done => {
+    it('DELETE request with invalid token', done => {
         request
             .delete(`/api/apartmentunits/${testAptUnit._id}`)
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .then(res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('DELETE request with valid token', done => {
+        request
+            .delete(`/api/apartmentunits/${testAptUnit._id}`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .then(res => {
                 assert.deepEqual(res.body, testAptUnitFinal);
                 done();

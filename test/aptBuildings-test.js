@@ -56,11 +56,69 @@ describe('Validating Apartment Buildings', () => {
         vacantunits: 2
     };
 
+    const userAdmin = {
+        username: 'Test Admin Bldgs',
+        password: 'ThePWD',
+        roles: ['admin']
+    };
+
+    const userSuperUser = {
+        username: 'Test Super Bldgs',
+        password: 'SuperPWD',
+        roles: ['super-user']
+    };
+
+    const userReadOnly = {
+        username: 'Test Read Only Bldgs',
+        password: 'ReadPWD',
+        roles: ['read-only']
+    };
+
     const request = chai.request(app);
 
-    it('GET all ', done => {
+    let tokenAdmin = '',
+        tokenSuper = '',
+        tokenRead = '';
+
+    before( done => {
+        request
+            .post( '/api/auth/signup' )
+            .send( userAdmin )
+            .then( res => assert.ok( tokenAdmin = res.body.token ) )
+            .then( done => {
+                request
+                    .post( '/api/auth/signup' )
+                    .send( userSuperUser )
+                    .then( res => assert.ok( tokenSuper = res.body.token ) )
+                    .then( done => {
+                        request
+                            .post( '/api/auth/signup' )
+                            .send( userReadOnly )
+                            .then( res => assert.ok( tokenRead = res.body.token ) )
+                            .then(done => {
+                                done();
+                            })
+                            .catch(done);
+                    });
+            });
+    });
+
+    it('GET all without token', done => {
         request
             .get('/api/aptbldgs')
+            .then( res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'unauthorized, no token provided' );
+                done();
+            });
+    });
+
+    it('GET all with token', done => {
+        // NOTE: all 3 users can GET
+        request
+            .get('/api/aptbldgs')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .then( res => {
                 assert.deepEqual(res.body, []);
                 done();
@@ -68,9 +126,23 @@ describe('Validating Apartment Buildings', () => {
             .catch(done);
     });
 
-    it('POST request', done => {
+    it('POST request with invalid token', done => {
         request
             .post('/api/aptbldgs')
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .send(testAptBldg)
+            .then(res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('POST request with valid token', done => {
+        request
+            .post('/api/aptbldgs')
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .send(testAptBldg)
             .then(res => {
                 const aptBldg = res.body;
@@ -87,6 +159,7 @@ describe('Validating Apartment Buildings', () => {
     it('GET all after POST', done => {
         request
             .get('/api/aptbldgs')
+            .set('Authorization', `Bearer ${tokenRead}`)
             .then( res => {
                 assert.deepEqual(res.body, [testAptBldg]);
                 done();
@@ -94,9 +167,23 @@ describe('Validating Apartment Buildings', () => {
             .catch(done);
     });
 
-    it('PUT request', done => {
+    it('PUT request - invalid token', done => {
         request
             .put(`/api/aptbldgs/${testAptBldg._id}`)
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .send(testAptBldgUpd)
+            .then(res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('PUT request - valid token', done => {
+        request
+            .put(`/api/aptbldgs/${testAptBldg._id}`)
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .send(testAptBldgUpd)
             .then(res => {
                 assert.deepEqual(res.body, testAptBldg);
@@ -108,6 +195,7 @@ describe('Validating Apartment Buildings', () => {
     it('GET by id', done => {
         request
             .get(`/api/aptbldgs/${testAptBldgFinal._id}`)
+            .set('Authorization', `Bearer ${tokenSuper}`)
             .then( res => {
                 testAptBldgFinal.apartments = [];
                 assert.deepEqual(res.body, testAptBldgFinal);
@@ -120,6 +208,7 @@ describe('Validating Apartment Buildings', () => {
     it('Vacancies request', done => {
         request
             .post('/api/aptbldgs')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send(testAptBldg2)
             .then(res => {
                 const aptBldg = res.body;
@@ -131,6 +220,7 @@ describe('Validating Apartment Buildings', () => {
 
         request
             .get('/api/aptbldgs/vacancies')
+            .set('Authorization', `Bearer ${tokenRead}`)
             .then( res => {
                 assert.deepEqual(res.body, {'Total Vacant Apartments': 5});
                 done();
@@ -139,9 +229,22 @@ describe('Validating Apartment Buildings', () => {
             
     });
 
-    it('DELETE request', done => {
+    it('DELETE request - invalid token', done => {
         request
             .delete(`/api/aptbldgs/${testAptBldg._id}`)
+            .set('Authorization', `Bearer ${tokenRead}`)
+            .then(res => done( 'status should not be 200' ) )
+            .catch(res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'not authorized' );
+                done();
+            });
+    });
+
+    it('DELETE request - valid token', done => {
+        request
+            .delete(`/api/aptbldgs/${testAptBldg._id}`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .then(res => {
                 assert.deepEqual(res.body, testAptBldgFinal);
                 done();
