@@ -50,7 +50,6 @@ describe('user', () => {
         done('We should have thrown an error!', response.body);
       })
       .catch(res => {
-        console.log('we hit the catch', res.response.res.text);
         assert.equal(res.status, 400);
         assert.equal(res.response.res.text, '400 ERROR: There is already a user named test');
         done();
@@ -63,11 +62,24 @@ describe('user', () => {
       .send(testUser)
       .then(response => {
         assert.isOk(response.body.token);
-        assert.equal(response.body.token, testUser.token);
+        assert.deepEqual(response.body.token, testUser.token);
         done();
       })
       .catch(done);
   });
+
+  it('token is valid', done => {
+    request
+      .post('/auth/validate')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', testUser.token)
+      .then(response => {
+        assert.deepEqual(response.body, {validAuth: true});
+        done();
+      })
+      .catch(done);
+  });
+
 
 
   after(done => {
