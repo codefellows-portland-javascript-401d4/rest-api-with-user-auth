@@ -11,7 +11,7 @@ describe('tests the mongo database', () => {
     const timberJim = {
         name: 'Timber Jim',
         age: 50,
-        jerseyNumber: '88'
+        jerseyNumber: 88
     };
     const timbers = {
         teamName: 'Timbers',
@@ -19,12 +19,12 @@ describe('tests the mongo database', () => {
         players: []
     };
 
-    // let _id = '';
+    let _id = '';
 
     it('Makes a GET request and asserts the database is empty', done => {
 
         request
-            .get('/api/team')
+            .get('/team')
             .then(res => {
                 assert.deepEqual(res.body, []);
                 done();
@@ -37,8 +37,8 @@ describe('tests the mongo database', () => {
 
     it('Posts a new person into the db', done => {
         request
-            .post('/api/team')
-            .send(timber)
+            .post('/team')
+            .send(timbers)
             .then(res => {
                 assert.ok(res.body._id);
                 timber._id = res.body._id;
@@ -53,13 +53,13 @@ describe('tests the mongo database', () => {
 
     it('Posts a new team into the db', done => {
         request
-            .post('/api/person')
+            .post('/person')
             .send(timberJim)
              .then(res => {
                 timberJim._id = res.body._id;
                 timberJim.__v = 0;
                 assert.deepEqual(res.body, timberJim);
-             });
+             })
              .catch(err => {
                  console.log(err);
                  done(err);
