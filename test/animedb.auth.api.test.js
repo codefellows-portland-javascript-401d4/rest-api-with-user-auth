@@ -119,13 +119,12 @@ describe('Checking access to anime DB with user auth enabled', done => {
             });
     });
 
-    it('makes a /DEL request to remove Seras using Alucard', done => {
+    it('uses /PUT to update character with a given showId with admin privelege', done => {
         request
-            .del('/users/' + userId)
+            .put('/animeshows/' + higurashi._id + '/character/' + keiichi._id)
             .set('Authorization', `Bearer ${adminToken}`)
             .then(res => {
-                assert.isOk(res.body);
-                assert.equal(res.body.username, 'Seras Victoria');
+                assert.deepEqual(res.body, keiichi);
                 done();
             })
             .catch(err => {
@@ -134,18 +133,83 @@ describe('Checking access to anime DB with user auth enabled', done => {
             });
     });
 
-    it('makes a /DEL request to remove Seras using Alucard', done => {
+    it('calls /GET on keiichi which should now have the show field populated', done => {
         request
-            .del('/users/' + adminId)
-            .set('Authorization', `Bearer ${adminToken}`)
+            .get('/animechars')
+            .set('Authorization', `Bearer ${userToken}`)
             .then(res => {
-                assert.isOk(res.body);
-                assert.equal(res.body.username, 'Alucard');
+                keiichi.showId = { _id: higurashi._id, showname: higurashi.showname };
+                assert.deepEqual(res.body[0], keiichi);
                 done();
             })
             .catch(err => {
                 console.error(err);
                 done(err);
             });
+    });
+
+    it('calls /GET on animeshows which should now have a character field populated', done => {
+        request
+            .get('/animeshows/' + higurashi._id)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .then(res => {
+                keiichi.showId = higurashi._id;
+                higurashi.characters.push(keiichi);
+                higurashi.airdate = new Date(higurashi.airdate).toISOString();
+                delete higurashi.__v;
+                assert.deepEqual(res.body, higurashi);
+                done();
+            })
+            .catch(err => {
+                console.error(err);
+                done(err);
+            });
+    });
+
+
+    describe('checks whether you can delete a user given admin privileges', () => {
+        it('makes a /DEL with only a user level privilege', done => {
+            request
+                .del('/users/' + userId)
+                .set('Authorization', `Bearer ${userToken}`)
+                .then(res => {
+                    done('this should fail with 400 level error')
+                })
+                .catch(err => {
+                    assert.equal(err.response.body.error, 'not authorized');
+                    done();
+                });
+        });
+        
+        
+        it('makes a /DEL request to remove Seras using Alucard', done => {
+            request
+                .del('/users/' + userId)
+                .set('Authorization', `Bearer ${adminToken}`)
+                .then(res => {
+                    assert.isOk(res.body);
+                    assert.equal(res.body.username, 'Seras Victoria');
+                    done();
+                })
+                .catch(err => {
+                    console.error(err);
+                    done(err);
+                });
+        });
+
+        it('makes a /DEL request to remove Seras using Alucard', done => {
+            request
+                .del('/users/' + adminId)
+                .set('Authorization', `Bearer ${adminToken}`)
+                .then(res => {
+                    assert.isOk(res.body);
+                    assert.equal(res.body.username, 'Alucard');
+                    done();
+                })
+                .catch(err => {
+                    console.error(err);
+                    done(err);
+                });
+        });
     });
 });
