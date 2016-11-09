@@ -59,17 +59,17 @@ describe( 'authentication checks', () => {
         roles: ['admin']
     };
 
-    // const user2 = {
-    //     username: '',
-    //     password: 'TooMuch',
-    //     roles: ['admin']
-    // };
+    const user2 = {
+        username: null,
+        password: 'TooMuch',
+        roles: ['admin']
+    };
 
-    // const user3 = {
-    //     username: 'Test Ahsterone',
-    //     password: '',
-    //     roles: ['admin']
-    // };
+    const user3 = {
+        username: 'Test Ahsterone',
+        password: null,
+        roles: ['admin']
+    };
 
     describe( 'user management', () => {
 
@@ -116,14 +116,13 @@ describe( 'authentication checks', () => {
                 .then( done, done );
         });
 
-        // Unable to figure these tests out, yet....
-        // it( 'signin requires username', done => {
-        //     badRequest( '/api/auth/signin', user2, 'Invalid username or password', done );
-        // });
+        it( 'signin requires username', done => {
+            badRequest( '/api/auth/signin', user2, 'Missing username or password', done );
+        });
 
-        // it( 'signin requires password', done => {
-        //     badRequest( '/api/auth/signin', user3, 'Invalid username or password', done );
-        // });
+        it( 'signin requires password', done => {
+            badRequest( '/api/auth/signin', user3, 'Missing username or password', done );
+        });
 
         it( 'signin', done => {
             request

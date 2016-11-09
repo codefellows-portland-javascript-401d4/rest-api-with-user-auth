@@ -80,21 +80,27 @@ describe('Validating ApartmentUnits', () => {
         request
             .post( '/api/auth/signup' )
             .send( userAdmin )
-            .then( res => assert.ok( tokenAdmin = res.body.token ) )
-            .then( done => {
-                request
-                    .post( '/api/auth/signup' )
-                    .send( userSuperUser )
-                    .then( res => assert.ok( tokenSuper = res.body.token ) )
-                    .then( done => {
-                        request
-                            .post( '/api/auth/signup' )
-                            .send( userReadOnly )
-                            .then( res => assert.ok( tokenRead = res.body.token ) )
-                            .then(done)
-                            .catch(done);
-                    });
-            });
+            .then( res => assert.ok( tokenAdmin = res.body.token ))
+            .then( done )
+            .catch(done);
+    });
+
+    before( done => {
+        request
+            .post( '/api/auth/signup' )
+            .send( userSuperUser )
+            .then( res => assert.ok( tokenSuper = res.body.token ) )
+            .then( done )
+            .catch(done);
+    });
+
+    before( done => {
+        request
+            .post( '/api/auth/signup' )
+            .send( userReadOnly )
+            .then( res => assert.ok( tokenRead = res.body.token ) )
+            .then( done )
+            .catch(done);
     });
 
     it('GET all without token', done => {
