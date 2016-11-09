@@ -10,7 +10,7 @@ describe('User schema', () => {
   it('requires a username', done => {
 
     let user1 = new User({
-      hashpass: 'passw0rd',
+      password: 'passw0rd',
     });
 
     user1.validate(err => {
@@ -43,7 +43,7 @@ describe('User schema', () => {
 
     let user3 = new User({
       username: 'ready user three',
-      hashpass: 'passw0rd'
+      password: 'passw0rd'
     });
 
     user3.validate(err => {
@@ -57,7 +57,7 @@ describe('User schema', () => {
 
     let user4 = new User({
       username: 'ready user four',
-      hashpass: 'passw0rd',
+      password: 'passw0rd',
       roles: ['User', 'Admin']
     });
 
@@ -72,13 +72,13 @@ describe('User schema', () => {
 
     let user5 = new User({
       username: 'ready user five',
-      hashpass: ''
+      password: ''
     });
 
     // generate the hashed password
     let hashedPass = user5.generateHash('passw0rd');
     // save the hash on the user
-    user5.hashpass = hashedPass;
+    user5.password = hashedPass;
     // check that the original and the hash match
     let results = user5.validateHash( 'passw0rd' );
     // assert that the results are true
