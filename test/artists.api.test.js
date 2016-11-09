@@ -21,7 +21,7 @@ describe('Artist:', () => {
   before(done => {
     request
       .post('/api/auth/signup')
-      .send({username:'somebody', password:'password'})
+      .send({username:'somebody', password:'password', admin: true})
       .then(res => {
         assert.ok(res.body.token);
         token = res.body.token;
