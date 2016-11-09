@@ -78,14 +78,23 @@ describe('User signup/signin', () => {
     request
       .get('/api/ships')
       .set('authorization', token)
-      .then(res => assert.ok(res.body));
+      .then(res => {
+        assert.ok(res.body);
+        done();
+      })
+      .catch(done);
   });
 
   it('Signs users in', done => {
     request
       .post('/api/auth/signin')
       .send(testUser)
-      .then(res => assert.equal(res.body.token, token));
+      .then(res => {
+        console.log(res.body);
+        assert.equal(res.body.token, token);
+        done();
+      })
+      .catch(done);
   });
 
 });
