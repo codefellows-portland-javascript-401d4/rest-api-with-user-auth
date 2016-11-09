@@ -26,21 +26,13 @@ describe('User authentication routes', () => {
 
     function dropCollection() {
       const name = 'testDB';
-      connection.db
-        .listCollections({ name })
-        .next((err, collInfo) => {
-          if (!collInfo) return done();
-          connection.db.dropCollection(name, done);
-        });
+      connection.db.dropDatabase(name, done);
     }
   });
 
   it('requires a username', done => {
 
-    const noName = {
-      password: 'Password'
-    };
-
+    const noName = { password: 'Password' };
     const error = '{"error":"Username and password are required."}';
 
     server
@@ -55,10 +47,7 @@ describe('User authentication routes', () => {
 
   it('requires a password', done => {
 
-    const noPass = {
-      username: 'Whats in a name'
-    };
-
+    const noPass = { username: 'Whats in a name' };
     const error = '{"error":"Username and password are required."}';
 
     server
@@ -70,33 +59,44 @@ describe('User authentication routes', () => {
       });
   });
 
-  it('requires a unique username', done => {
+  it('receives a token when signing up', done => {
 
     const firstUser = {
-      username: 'Username',
+      username: 'First User',
       password: 'Password'
     };
 
-    const secondUser = {
-      username: 'Username',
-      password: 'Password'
-    };
-
-    const error = `{"error":"Username ${firstUser.username} already taken. Please try a different name."}`;
+    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
 
     server
       .post('/api/auth/signup')
       .send(firstUser)
       .end((err, res) => {
+        let tokenArray = res.text.split('.');
+        let receivedToken = tokenArray[0];
+        assert.equal(receivedToken, sampleToken);
+        done();
       });
+
+  });
+
+  it('requires a unique username', done => {
+
+    const duplicateUser = {
+      username: 'First User',
+      password: 'Password'
+    };
+
+    const error = `{"error":"Username ${duplicateUser.username} already taken. Please try a different name."}`;
 
     server
       .post('/api/auth/signup') // expecting an error
-      .send(secondUser)
+      .send(duplicateUser)
       .end((err, res) => {
         assert.equal(res.text, error);
         done();
       });
   });
+
 
 });
