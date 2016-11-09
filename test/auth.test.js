@@ -9,11 +9,9 @@ describe('auth', () => {
     const req = chai.request(app);
 
     before(done => {
-        console.log('readyState before', connection.readyState);
         const drop = () => connection.db.dropDatabase(done);
         if (connection.readyState === 1) drop();
         else connection.once('open', drop);
-        console.log('readyState after', connection.readyState);
     });
 
     describe('unauthorized', () => {
