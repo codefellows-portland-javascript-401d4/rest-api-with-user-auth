@@ -50,6 +50,9 @@ describe('Checking access to anime DB with user auth enabled', done => {
     let userToken = '';
     let adminId = '';
     let userId = '';
+    const updateRequest = {
+        attackpower: 9999
+    };
 
     it('create a new admin and retrieve a token', done => {
         request
@@ -166,6 +169,21 @@ describe('Checking access to anime DB with user auth enabled', done => {
             });
     });
 
+    it('calls /PUT on animechars to update keiichi using userToken', done => {
+        request
+            .put('/animechars/' + keiichi._id)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send(updateRequest)
+            .then(res => {
+                keiichi.attackpower = 9999;
+                assert.deepEqual(res.body, keiichi);
+                done();
+            })
+            .catch(err => {
+                console.error(err);
+                done(err);
+            });
+    });
 
     describe('checks whether you can delete a user given admin privileges', () => {
         it('makes a /DEL with only a user level privilege', done => {
@@ -173,14 +191,13 @@ describe('Checking access to anime DB with user auth enabled', done => {
                 .del('/users/' + userId)
                 .set('Authorization', `Bearer ${userToken}`)
                 .then(res => {
-                    done('this should fail with 400 level error')
+                    done('this should fail with 400 level error');
                 })
                 .catch(err => {
                     assert.equal(err.response.body.error, 'not authorized');
                     done();
                 });
         });
-        
         
         it('makes a /DEL request to remove Seras using Alucard', done => {
             request
