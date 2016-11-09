@@ -156,4 +156,50 @@ describe('user', () => {
       })
       .catch(done);
   });
+
+  it('responds to "GET" on bad path', done => {
+    request
+      .get('/cats/badid')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', token)
+      .then(res => {
+        done('we should be throwing and error', res);
+      })
+      .catch(res => {
+        assert.equal(res.response.res.text, '404 ERROR: Bad request, resource does not exist!');
+        assert.equal(res.response.res.statusCode, 404);
+        done();
+      });
+  });
+
+  it('responds to bad JSON', done => {
+    request
+      .post('/cats')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', token)
+      .send('{"name:"cat","age:"4}')
+      .then(res => {
+        done('this should trow an error', res);
+      })
+      .catch(res => {
+        assert.equal(res.response.res.statusCode, 400);
+        assert.equal(res.response.res.text, '400 ERROR: Invalid data input!');
+        done();
+      });
+  });
+
+  it('responds to invaid data', done => {
+    request
+      .post('/cats')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', token)
+      .send({age:'not a number', chill:true})
+      .then(res => {
+        done('this should throw an error', res);
+      })
+      .catch(res => {
+        assert.equal(res.response.res.statusCode, 400);
+        done();
+      });
+  });
 });
