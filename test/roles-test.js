@@ -12,7 +12,7 @@ require('dotenv').load({ path: path.join(__dirname, '.env.test') });
 const connection = require('../lib/mongoose-config');
 const app = require('../lib/app');
 
-describe('Validating User Roles', () => {
+describe('Validating User Roles: ', () => {
 
     before( done => {
         const CONNECTED = 1;
@@ -113,7 +113,6 @@ describe('Validating User Roles', () => {
             .send(testRole)
             .then(res => {
                 const newRole = res.body;
-                console.log('newRole after POST:', newRole);
                 assert.ok(newRole._id);
                 testRole._id = newRole._id;
                 testRole.__v = 0;
@@ -153,7 +152,6 @@ describe('Validating User Roles', () => {
             .set('Authorization', `Bearer ${tokenAdmin}`)
             .send(testRoleUpd)
             .then(res => {
-                console.log('PUT request - response body:', res.body);
                 assert.deepEqual(res.body, testRole);
                 done();
             })
@@ -173,17 +171,18 @@ describe('Validating User Roles', () => {
 
     it('DELETE request - no token', done => {
         request
-            .delete(`/api/aptbldgs/${testRoleFinal._id}`)
-            .then(res => {
-                assert.deepEqual(res.body, testRoleFinal);
+            .delete(`/api/roles/${testRoleFinal._id}`)
+            .then( res => done( 'status should not be 200' ) )
+            .catch( res => {
+                assert.equal( res.status, 400 );
+                assert.equal( res.response.body.error, 'unauthorized, no token provided' );
                 done();
-            })
-            .catch(done);
+            });
     });
 
     it('DELETE request - valid token', done => {
         request
-            .delete(`/api/aptbldgs/${testRoleFinal._id}`)
+            .delete(`/api/roles/${testRoleFinal._id}`)
             .set('Authorization', `Bearer ${tokenAdmin}`)
             .then(res => {
                 assert.deepEqual(res.body, testRoleFinal);
