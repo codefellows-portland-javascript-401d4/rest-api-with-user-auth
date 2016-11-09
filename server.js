@@ -7,6 +7,6 @@ require('./lib/setup-mongoose');
 const server = http.createServer(app);
 
 server.listen(port, err => {
-    if (err) => console.log(`Error: ${err}`);
-    else console.log(`Server listening on port ${port}`);
+    if (err) console.log(`Error: ${err}`);
+    else console.log('Server running at', server.address());
 });
