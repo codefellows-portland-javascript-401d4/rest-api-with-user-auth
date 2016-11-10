@@ -21,22 +21,21 @@ describe('tests the mongo database', () => {
 
     let _id = '';
 
-    // it('Makes a GET request and asserts the database is empty', done => {
+    it('Makes a GET request and asserts the database is not empty', done => {
 
-    //     request
-    //         .get('/team')
-    //         .then(res => {
-    //             assert.notDeepEqual(res.body, []);
-    //             done();
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             done(err);
-    //         });
-    // });
+        request
+            .get('/team')
+            .then(res => {
+                assert.notDeepEqual(res.body, []);
+                done();
+            })
+            .catch(err => {
+                console.log(err);
+                done(err);
+            });
+    });
 
     it('Posts a team into the db', done => {
-            console.log("test" + timbers);
         request
             .post('/team/1')
             .send(timber)
@@ -57,26 +56,41 @@ describe('tests the mongo database', () => {
             .post('/person/1')
              .send(timberJim)
              .then(res => {
-                timberJim._id = res.body._id;
+                timberJim._id = res.body._id; 
                 timberJim.__v = 0;
                 assert.deepEqual(res.body, timberJim);
+                done();
              })
              .catch(err => {
                  console.log(err);
                  done(err);
              });
     });
-    // it('Deletes a team from the db', done => {
-    //     request
-    //         .del('/api/team'+ timber._id)
-    //         .then(res => {
-    //             assert.deepEqual(res.body, timbers);
-    //             done();
-    //         })
-    //         .catch(err =>{
-    //             console.log(err);
-    //             done(err);
-    //         });
-    // });
+
+    it('Deletes a team from the db', done => {
+        request
+            .del('/team/'+ timber._id)
+            .then(res => {
+                assert.deepEqual(res.body, timber);
+                done();
+            })
+            .catch(err =>{
+                console.log(err);
+                done(err);
+            });
+    });
+
+        it('Deletes a team from the db', done => {
+        request
+            .del('/person/'+ timberJim._id)
+            .then(res => {
+                assert.deepEqual(res.body, timberJim);
+                done();
+            })
+            .catch(err =>{
+                console.log(err);
+                done(err);
+            });
+    });
 
 });
