@@ -92,15 +92,11 @@ describe('RESTful API for ships resource', () => {
           .get(`/api/ships/${ship1._id}`)
           .set('authorization', token)
           .then(res => {
-            console.log(res.body);
-            done('Ship should have been deleted.');
-          })
-          .catch(res => {
-            assert.equal(res.status, 404);
+            assert.deepEqual(res.body, {});
             done();
-          });
+          })
+          .catch(done);
       });
-      // .catch(done);
   });
 
 });
