@@ -18,7 +18,9 @@ describe('User authentication routes', () => {
 
   const server = chai.request(app);
   let token = '';
+  let adminToken = '';
   const tokenUser = { username: 'Token User', password: 'Password' };
+  const admin = { username: 'Superduper User', password: 'Passw0rd', roles: ['admin'] };
 
   before(done => {
 
@@ -34,7 +36,6 @@ describe('User authentication routes', () => {
 
   before(done => {
     // Set up a tokened user for later tests
-
     server
       .post('/api/auth/signup')
       .send(tokenUser)
@@ -44,7 +45,20 @@ describe('User authentication routes', () => {
         assert.isOk(token = response.token);
         done();
       });
+  });
 
+  before(done => {
+    // Set up a admin for later tests
+    server
+      .post('/api/auth/signup')
+      .send(admin)
+      .end((err, res) => {
+        if (err) done(err);
+        let response = JSON.parse(res.text);
+        adminToken = response.token;
+        assert.isOk(adminToken);
+        done();
+      });
   });
 
   it('requires a username', done => {
@@ -129,6 +143,21 @@ describe('User authentication routes', () => {
       })
       .catch(done);
   });
-  
+
+  it.only('requires a admin access to hit the /admin route', done => {
+
+    console.log('the admin token is ', adminToken);
+
+    server
+      .get('/api/auth/admin')
+      .send('Authorization', adminToken)
+      .then(res => {
+        console.log('response was ', res.text);
+        done();
+      }) // if we get a response that's a win
+      .catch(done);
+
+  });
+
 
 });
