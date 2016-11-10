@@ -183,13 +183,14 @@ describe('city and country routing', () => {
             .catch(done);
     });
 
-    it('DELETE all users', done => {
-        req
-            .del('/auth')
-            .then(res => {
-                expect(res).status(200);
-                done();
-            })
-            .catch(done);
-    });
+    // it('DELETE all users', done => {
+    //     req
+    //         .del('/auth')
+    //         .then(res => {
+    //             expect(res).status(200);
+    //             done();
+    //         })
+    //         .catch(done);
+    // });
+
 });
