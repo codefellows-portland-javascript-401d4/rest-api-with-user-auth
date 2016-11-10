@@ -17,6 +17,8 @@ const app = require('../lib/app');
 describe('User authentication routes', () => {
 
   const server = chai.request(app);
+  let token = '';
+  const tokenUser = { username: 'Token User', password: 'Password' };
 
   before(done => {
 
@@ -28,6 +30,20 @@ describe('User authentication routes', () => {
       const name = 'testDB';
       connection.db.dropDatabase(name, done);
     }
+  });
+
+  before(done => {
+    // Set up a tokened user for later tests
+
+    server
+      .post('/api/auth/signup')
+      .send(tokenUser)
+      .end((err, res) => {
+        if (err) done(err);
+        assert.isOk(token = res.text);
+        done();
+      });
+
   });
 
   it('requires a username', done => {
@@ -72,7 +88,8 @@ describe('User authentication routes', () => {
       .post('/api/auth/signup')
       .send(firstUser)
       .end((err, res) => {
-        let tokenArray = res.text.split('.');
+        let tokenBody = JSON.parse(res.text).token;
+        let tokenArray = tokenBody.split('.');
         let receivedToken = tokenArray[0];
         assert.equal(receivedToken, sampleToken);
         done();
@@ -83,7 +100,7 @@ describe('User authentication routes', () => {
   it('requires a unique username', done => {
 
     const duplicateUser = {
-      username: 'First User',
+      username: 'Token User',
       password: 'Password'
     };
 
@@ -97,6 +114,5 @@ describe('User authentication routes', () => {
         done();
       });
   });
-
 
 });
