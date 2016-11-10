@@ -186,5 +186,19 @@ describe('User authentication routes', () => {
       .catch(done);
 
   });
-  
+
+  it('errors if you hit the /admin route as a normal user', done => {
+
+    server
+      .get('/api/auth/admin')
+      .set('Authorization', token)
+      .catch(err => {
+        assert.equal(err.status, 401);
+        assert.equal(err.response.text, '{"error":"Unauthorized."}');
+        done();
+      });
+
+  });
+
+
 });
