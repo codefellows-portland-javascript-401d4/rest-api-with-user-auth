@@ -125,7 +125,8 @@ describe('User authentication routes', () => {
       .post('/api/auth/signup') // expecting an error
       .send(duplicateUser)
       .end((err, res) => {
-        assert.equal(res.text, error);
+        assert.equal(err.status, 400);
+        assert.equal(err.response.text, error);
         done();
       });
   });
@@ -144,17 +145,15 @@ describe('User authentication routes', () => {
       .catch(done);
   });
 
-  it.only('requires a admin access to hit the /admin route', done => {
-
-    console.log('the admin token is ', adminToken);
+  it('requires a admin access to hit the /admin route', done => {
 
     server
       .get('/api/auth/admin')
-      .send('Authorization', adminToken)
+      .set('Authorization', adminToken)
       .then(res => {
-        console.log('response was ', res.text);
+        assert.isAbove(res.text.length, 0);
         done();
-      }) // if we get a response that's a win
+      })
       .catch(done);
 
   });
