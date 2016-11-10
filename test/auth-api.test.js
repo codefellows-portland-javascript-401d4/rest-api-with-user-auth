@@ -61,6 +61,8 @@ describe('User authentication routes', () => {
       });
   });
 
+  /***************  SIGN IN TESTS ***************************/
+
   it('requires a username', done => {
 
     const noName = { password: 'Password' };
@@ -90,6 +92,27 @@ describe('User authentication routes', () => {
       });
   });
 
+  it('requires a unique username', done => {
+
+    const duplicateUser = {
+      username: 'Token User',
+      password: 'Password'
+    };
+
+    const error = `{"error":"Username ${duplicateUser.username} already taken. Please try a different name."}`;
+
+    server
+      .post('/api/auth/signup') // expecting an error
+      .send(duplicateUser)
+      .end(err => {
+        assert.equal(err.status, 400);
+        assert.equal(err.response.text, error);
+        done();
+      });
+  });
+
+  /***************  TOKEN TESTS ***************************/
+
   it('receives a token when signing up', done => {
 
     const firstUser = {
@@ -110,25 +133,6 @@ describe('User authentication routes', () => {
         done();
       });
 
-  });
-
-  it('requires a unique username', done => {
-
-    const duplicateUser = {
-      username: 'Token User',
-      password: 'Password'
-    };
-
-    const error = `{"error":"Username ${duplicateUser.username} already taken. Please try a different name."}`;
-
-    server
-      .post('/api/auth/signup') // expecting an error
-      .send(duplicateUser)
-      .end(err => {
-        assert.equal(err.status, 400);
-        assert.equal(err.response.text, error);
-        done();
-      });
   });
 
   it('requires a token to hit the /me route', done => {
@@ -170,7 +174,7 @@ describe('User authentication routes', () => {
 
   });
 
-  it('requires a admin access to hit the /admin route', done => {
+  it('requires admin access to hit the /admin route', done => {
 
     server
       .get('/api/auth/admin')
@@ -182,6 +186,5 @@ describe('User authentication routes', () => {
       .catch(done);
 
   });
-
-
+  
 });
