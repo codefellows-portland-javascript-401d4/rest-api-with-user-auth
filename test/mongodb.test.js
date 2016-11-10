@@ -9,36 +9,37 @@ describe('tests the mongo database', () => {
 
     const request = chai.request(app);
     const timberJim = {
-        name: 'Timber Jim',
-        age: 50,
-        jerseyNumber: 88
+        "name": "Timber Jim",
+        "age": 50,
+        "jerseyNumber": 8
     };
-    const timbers = {
+    const timber = {
         teamName: 'Timbers',
         city: 'Portland',
-        players: []
+        players: [null]
     };
 
     let _id = '';
 
-    it('Makes a GET request and asserts the database is empty', done => {
+    // it('Makes a GET request and asserts the database is empty', done => {
 
-        request
-            .get('/team')
-            .then(res => {
-                assert.deepEqual(res.body, []);
-                done();
-            })
-            .catch(err => {
-                console.log(err);
-                done(err);
-            });
-    });
+    //     request
+    //         .get('/team')
+    //         .then(res => {
+    //             assert.notDeepEqual(res.body, []);
+    //             done();
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //             done(err);
+    //         });
+    // });
 
-    it('Posts a new person into the db', done => {
+    it('Posts a team into the db', done => {
+            console.log("test" + timbers);
         request
-            .post('/team')
-            .send(timbers)
+            .post('/team/1')
+            .send(timber)
             .then(res => {
                 assert.ok(res.body._id);
                 timber._id = res.body._id;
@@ -51,10 +52,10 @@ describe('tests the mongo database', () => {
             });
     });
 
-    it('Posts a new team into the db', done => {
+    it('Posts a new player into the db', done => {
         request
-            .post('/person')
-            .send(timberJim)
+            .post('/person/1')
+             .send(timberJim)
              .then(res => {
                 timberJim._id = res.body._id;
                 timberJim.__v = 0;
