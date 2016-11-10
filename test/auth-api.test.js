@@ -124,7 +124,7 @@ describe('User authentication routes', () => {
     server
       .post('/api/auth/signup') // expecting an error
       .send(duplicateUser)
-      .end((err, res) => {
+      .end(err => {
         assert.equal(err.status, 400);
         assert.equal(err.response.text, error);
         done();
@@ -143,6 +143,18 @@ describe('User authentication routes', () => {
         done();
       })
       .catch(done);
+  });
+
+  it('errors if you hit /me without a token', done => {
+
+    server
+      .get('/api/auth/me')
+      .catch(err => {
+        assert.equal(err.status, 400);
+        assert.equal(err.response.text, '{"error":"Unauthorized: No token provided."}');
+        done();
+      });
+
   });
 
   it('requires a admin access to hit the /admin route', done => {
