@@ -53,11 +53,11 @@ const badRequest = (url, send, error, done) => {
 describe('User signup/signin', () => {
 
   it('Signup needs username', done => {
-    badRequest('/api/auth/signup', {password: 'hello'}, 'Username and Password required.', done);
+    badRequest('/api/auth/signup', {password: 'hunter2'}, 'Username and Password required.', done);
   });
 
   it('Signup needs a password', done => {
-    badRequest('/api/auth/signup', {username: 'Billy'}, 'Username and Password required.', done);
+    badRequest('/api/auth/signup', {username: 'Postman'}, 'Username and Password required.', done);
   });
 
   let token = '';
@@ -90,7 +90,6 @@ describe('User signup/signin', () => {
       .post('/api/auth/signin')
       .send(testUser)
       .then(res => {
-        console.log(res.body);
         assert.equal(res.body.token, token);
         done();
       })
