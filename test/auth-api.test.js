@@ -157,6 +157,19 @@ describe('User authentication routes', () => {
 
   });
 
+  it('errors if you hit /me with an incorrect token', done => {
+
+    server
+      .get('/api/auth/me')
+      .set('Authorization', 'Not a token')
+      .catch(err => {
+        assert.equal(err.status, 403);
+        assert.equal(err.response.text, '{"error":"Forbidden: Invalid token."}');
+        done();
+      });
+
+  });
+
   it('requires a admin access to hit the /admin route', done => {
 
     server
