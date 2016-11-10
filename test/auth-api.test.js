@@ -40,7 +40,8 @@ describe('User authentication routes', () => {
       .send(tokenUser)
       .end((err, res) => {
         if (err) done(err);
-        assert.isOk(token = res.text);
+        let response = JSON.parse(res.text);
+        assert.isOk(token = response.token);
         done();
       });
 
@@ -115,7 +116,7 @@ describe('User authentication routes', () => {
       });
   });
 
-  it.only('requires a token to hit the /me route', done => {
+  it('requires a token to hit the /me route', done => {
 
     const expectedResults = '{"username":"Token User","favoriteAuthors":[],"favoriteBooks":[]}';
 
@@ -128,6 +129,6 @@ describe('User authentication routes', () => {
       })
       .catch(done);
   });
-
+  
 
 });
