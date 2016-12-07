@@ -1,0 +1,37 @@
+{
+  "name": "express-mongo-relations",
+  "version": "1.0.0",
+  "description": "* Code Fellows lab assignment * Added relations between resources to Express app backed by Mongo using Mongoose",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "MONGODB_URI=mongodb://localhost/test mocha ./test/e2e",
+    "test:unit": "mocha ./test/unit",
+    "test:watch": "MONGODB_URI=mongodb://localhost/test nodemon --exec mocha",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caraldi/express-mongo-relations.git"
+  },
+  "author": "Caitlin Araldi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caraldi/express-mongo-relations/issues"
+  },
+  "homepage": "https://github.com/caraldi/express-mongo-relations#readme",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "mongoose": "^4.6.6"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.9.1",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0"
+  }
+}
