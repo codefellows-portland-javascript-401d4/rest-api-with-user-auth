@@ -5,7 +5,7 @@ chai.use(chaiHttp);
 
 const connection = require( '../lib/setup-mongoose');
 
-const app = require( '../app' );
+const app = require( '../lib/app' );
 
 describe( 'team', () => {
     before( done => {
@@ -25,16 +25,27 @@ describe( 'team', () => {
     });
 
     const request = chai.request(app);
+    let token = '';
 
-    const seahawks = {
+    before( done => {
+        request
+            .post('/api/auth/signup')
+            .send({ username: 'kevin', password: 'bird', roles: ['admin']})
+            .then(res => assert.ok(token = res.body.token))
+            .then(done, done);
+    });
+
+    let seahawks = {
         name: 'Seahawks'
     };
 
-    it( 'GET all', done => {
+    it( 'GET all afer POST', done => {
         request
             .get( '/api/teams' )
+            .set('Authorization', `Bearer ${token}`)
             .then( res => {
-                assert.deepEqual( res.body, [] );
+                assert.equal(res.body.length, 1);
+                assert.equal(res.body[0]._id, seahawks._id);
                 done();
             })
             .catch( done );
@@ -43,12 +54,14 @@ describe( 'team', () => {
     it( 'POST', done => {
         request
             .post( '/api/teams' )
+            .set('Authorization', `Bearer ${token}`)
             .send( seahawks )
             .then( res => {
                 const team = res.body;
                 assert.ok( team._id);
-                seahawks.__v = 0;
-                seahawks._id = team._id;
+                // seahawks.__v = 0;
+                // seahawks._id = team._id;
+                seahawks = team;
                 done();
             })
             .catch( done );
@@ -57,6 +70,7 @@ describe( 'team', () => {
     it( 'GET by id', done => {
         request
             .get(`/api/teams/${seahawks._id}`)
+            .set('Authorization', `Bearer ${token}`)
             .then( res => {
                 const team = res.body;
                 assert.deepEqual( team, seahawks );
