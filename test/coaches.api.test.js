@@ -37,7 +37,7 @@ describe( 'coach', () => {
     before( done => {
         request
         .post('api/auth/signup')
-        .send({ username: 'bill', password: 'pizza'})
+        .send({ username: 'bill', password: 'pizza', roles: ['admin']})
         .then(res => assert.ok(token = res.body.token))
         .then(done, done);
     });
