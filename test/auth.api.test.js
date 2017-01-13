@@ -64,11 +64,11 @@ describe('auth', () => {
       }
 
       it('signup requires username', done => {
-        badRequest('/api/auth/signup', { username: 'Pete' }, 'username and password must be supplied', done);
+        badRequest('/api/auth/signup', { username: 'Pete' }, 'username and password must be entered', done);
       });
 
       it('signup requires password', done => {
-        badRequest('/api/auth/signup', { password: 'candy' }, 'username and password must be supplied', done);
+        badRequest('/api/auth/signup', { password: 'candy' }, 'username and password must be entered', done);
       });
 
       let token = '';
@@ -85,7 +85,7 @@ describe('auth', () => {
       });
 
       it('cannot use the same username', done => {
-        badRequest('/api/auth/signup', user, 'username Robot already exists', done);
+        badRequest('/api/auth/signup', user, 'username robot has been used', done);
       });
 
       it('token is valid', done => {

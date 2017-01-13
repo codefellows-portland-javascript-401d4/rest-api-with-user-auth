@@ -23,11 +23,12 @@ describe( 'coach', () => {
                 });
         }
     });
+    
 
     const request = chai.request(app);
     let token = '';
 
-    before(done => {
+    before( done => {
         request
         .post('api/auth/signup')
         .send({ username: 'bill', password: 'pizza'})

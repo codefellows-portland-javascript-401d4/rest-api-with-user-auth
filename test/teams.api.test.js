@@ -9,20 +9,21 @@ const app = require( '../lib/app' );
 
 describe( 'team', () => {
     before( done => {
-        const CONNECTED = 1;
-        if (connection.readyState === CONNECTED) dropCollection();
-        else connection.on('open', dropCollection);
-
-        function dropCollection() {
-            const name = 'teams';
-            connection.db
-                .listCollections({ name })
-                .next((err, collinfo) => {
-                    if (!collinfo) return done();
-                    connection.db.dropCollection(name, done);
-                });
-        }
+        const drop = () => connection.db.dropDatabase(done);
+        if (connection.readyState === 1) drop();
+        else connection.on('open', drop);
     });
+
+        // function dropCollection() {
+        //     const name = 'teams';
+        //     connection.db
+        //         .listCollections({ name })
+        //         .next((err, collinfo) => {
+        //             if (!collinfo) return done();
+        //             connection.db.dropCollection(name, done);
+        //         });
+        // }
+    
 
     const request = chai.request(app);
     let token = '';
@@ -36,7 +37,7 @@ describe( 'team', () => {
     });
 
     let seahawks = {
-        name: 'Seahawks'
+        teamName: 'Seahawks'
     };
 
     it( 'GET all afer POST', done => {
