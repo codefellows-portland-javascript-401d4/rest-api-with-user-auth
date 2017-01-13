@@ -10,7 +10,7 @@ describe('auth', () => {
 
   before(done => {
     const drop = () => connection.db.dropDatabase(done);
-    if (connection.readState === 1) drop();
+    if (connection.readyState === 1) drop();
     else connection.on('open', drop);
   });
 
