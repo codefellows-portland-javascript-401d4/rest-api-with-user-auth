@@ -40,17 +40,7 @@ describe( 'team', () => {
         teamName: 'Seahawks'
     };
 
-    it( 'GET all afer POST', done => {
-        request
-            .get( '/api/teams' )
-            .set('Authorization', `Bearer ${token}`)
-            .then( res => {
-                assert.equal(res.body.length, 1);
-                assert.equal(res.body[0]._id, seahawks._id);
-                done();
-            })
-            .catch( done );
-    });
+    
 
     it( 'POST', done => {
         request
@@ -75,6 +65,18 @@ describe( 'team', () => {
             .then( res => {
                 const team = res.body;
                 assert.deepEqual( team, seahawks );
+                done();
+            })
+            .catch( done );
+    });
+
+    it( 'GET all afer POST', done => {
+        request
+            .get( '/api/teams' )
+            .set('Authorization', `Bearer ${token}`)
+            .then( res => {
+                assert.equal(res.body.length, 1);
+                assert.equal(res.body[0]._id, seahawks._id);
                 done();
             })
             .catch( done );

@@ -8,25 +8,31 @@ const connection = require( '../lib/setup-mongoose');
 const app = require( '../lib/app' );
 
 describe( 'coach', () => {
-    before( done => {
-        const CONNECTED = 1;
-        if (connection.readyState === CONNECTED) dropCollection();
-        else connection.on('open', dropCollection);
+    before(done => {
+        const drop = () => connection.db.dropDatabase(done);
+        if (connection.readyState === 1) drop();
+        else connection.on('open', drop);
 
-        function dropCollection() {
-            const name = 'coaches';
-            connection.db
-                .listCollections({ name })
-                .next((err, collinfo) => {
-                    if (!collinfo) return done();
-                    connection.db.dropCollection(name, done);
-                });
-        }
-    });
+        });
+
+    //     function dropCollection() {
+    //         const name = 'coaches';
+    //         connection.db
+    //             .listCollections({ name })
+    //             .next((err, collinfo) => {
+    //                 if (!collinfo) return done();
+    //                 connection.db.dropCollection(name, done);
+    //             });
+    //     }
+     
     
 
     const request = chai.request(app);
     let token = '';
+
+    let pete = {
+        coachName: 'Pete Carroll'
+    };
 
     before( done => {
         request
@@ -36,9 +42,7 @@ describe( 'coach', () => {
         .then(done, done);
     });
 
-    let pete = {
-        coachName: 'Pete Carroll'
-    };
+    
 
     it( 'GET all', done => {
         request
