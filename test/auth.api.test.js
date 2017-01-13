@@ -6,6 +6,8 @@ chai.use(chaiHttp);
 const connection = require('../lib/setup-mongoose');
 const app = require('../lib/app');
 
+const request = chai.request(app);
+
 describe('auth', () => {
 
   before(done => {
@@ -13,8 +15,7 @@ describe('auth', () => {
     if (connection.readyState === 1) drop();
     else connection.on('open', drop);
   });
-
-  const request = chai.request(app);
+  
 
   describe('unauthorized', () => {
 

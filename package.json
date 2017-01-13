@@ -4,9 +4,9 @@
   "description": "REST API with user Auth Lab",
   "main": "server.js",
   "scripts": {
-    "test": "MONGODB_URI=mongodb://localhost/football-test mocha",
-    "start": "DEBUG=myapp.* nodemon server.js",
-    "test:watch": "MONGODB_URI=mongodb://localhost/football-test nodemon --exec mocha"
+    "test": "npm run test:run",   
+    "test:run": "MONGODB_URI=mongodb://localhost/football-test mocha",
+    "test:watch": "npm run test:run -- -w"
   },
   "repository": {
     "type": "git",
