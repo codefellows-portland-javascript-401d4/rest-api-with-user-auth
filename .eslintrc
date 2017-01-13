@@ -1,15 +1,24 @@
 {
-  "rules": {
-    "indent": ["error", 4],
-    "quotes": ["error", "single"],
-    "linebreak-style": ["error", "unix"],
-    "semi": ["error", "always"],
-    "no-console": "off" 
-  },
-  "env": {
-    "es6": true,
-    "node": true,
-    "mocha": true
-  },
-  "extends": "eslint:recommended"
-}
+    "env": {
+        "es6": true,
+        "node": true,
+        "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": 0,
+        "no-unused-vars": 0
+    }
+ }

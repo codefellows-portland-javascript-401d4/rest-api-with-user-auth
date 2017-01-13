@@ -1,6 +1,4 @@
-'use strict';
-
-const Artist = require('../../lib/models/artist');
+const Artist = require('../lib/models/artist');
 const assert = require('chai').assert;
 
 describe ('Artist model', () => {

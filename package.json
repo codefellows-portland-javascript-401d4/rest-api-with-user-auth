@@ -4,11 +4,11 @@
   "description": "* Code Fellows lab assignment * Added relations between resources to Express app backed by Mongo using Mongoose",
   "main": "server.js",
   "scripts": {
-    "test": "npm run test:unit && npm run test:e2e",
-    "test:e2e": "MONGODB_URI=mongodb://localhost/test mocha ./test/e2e",
-    "test:unit": "mocha ./test/unit",
-    "test:watch": "MONGODB_URI=mongodb://localhost/test nodemon --exec mocha",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "mocha",
+    "test:watch": "npm test -- -w",
+    "start": "npm test && node server.js"
   },
   "repository": {
     "type": "git",

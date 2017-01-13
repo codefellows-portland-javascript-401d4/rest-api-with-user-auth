@@ -1,6 +1,4 @@
-'use strict';
-
-const Movement = require('../../lib/models/movement');
+const Movement = require('../lib/models/movement');
 const assert = require('chai').assert;
 
 describe ('Movement model', () => {
