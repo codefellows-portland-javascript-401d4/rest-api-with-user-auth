@@ -1,0 +1,38 @@
+ {
+  "name": "rest-api-with-user-auth",
+  "version": "1.0.0",
+  "description": "REST API with user Auth Lab",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm run test:run",   
+    "test:run": "MONGODB_URI=mongodb://localhost/football-test mocha",
+    "test:watch": "npm run test:run -- -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathanPickard/rest-api-with-user-auth.git"
+  },
+  "author": "Nathan Pickard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NathanPickard/rest-api-with-user-auth/issues"
+  },
+  "homepage": "https://github.com/NathanPickard/rest-api-with-user-auth#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.0",
+    "body-parser": "^1.15.2",
+    "debug": "^2.3.0",    
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.2.1",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0"    
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "rimraf": "^2.5.4",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0",
+    "nodemon": "^1.11.0"
+  }
+}
